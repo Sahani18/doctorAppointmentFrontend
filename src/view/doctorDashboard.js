@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import DoctorCard from "../component/doctorComponent/DoctorCard";
 import { Link, useLocation } from "react-router-dom";
 import BlueButton from "../component/common/blueButton";
 import YellowButton from "../component/common/yellowButton";
@@ -75,12 +74,15 @@ function DoctorDashboard() {
           toast(data.error);
         } else {
           setPatient(data);
+        
+
           alert(
-            `Patient is ${data.patient.fullname} his contact is ${data.patient.contact} & age is ${data.patient.age}`
+            `Patient is ${data.fullname} his contact is ${data.contact} & age is ${data.age}`
           );
+       
         }
       })
-      .catch(() => console.log("Error"));
+      .catch((err) => console.log("Error"));
   };
 
   return (

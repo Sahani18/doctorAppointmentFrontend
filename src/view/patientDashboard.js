@@ -11,69 +11,57 @@ const PatientDashboard = () => {
   const [doctors, setDoctors] = useState([]);
   const location = useLocation();
 
-  const patientID = location.state._id;
-  const [doctorData, setDoctorData] = useState([]);
-  const [names, setNames] = useState([]);
   var slots = location.state.bookingDate;
-  const [count, setCount] = useState(0);
 
-  const getItem = () => {
-    doctorData.forEach((doc) => {
-      return console.log(doc.data.fullname);
-    });
+  const [isShow, setIsShow] = useState(false);
+  const [value, setValue] = useState([
+    {
+      name: "",
+      slot: "",
+      email: "",
+    },
+  ]);
+
+  const noBooking = () => {
+    return (
+      <div className="h-[100px] w-[700px] mx-auto justify-center items-center content-center bg-slate-300 rounded-md shadow-md text-center text-3xl text-black">
+        <div>
+          <p className="mt-3">No Booking Found</p>
+        </div>
+      </div>
+    );
+  };
+  const showBooking = () => {
+    console.log("showing the booking",value);
+   /*  return value.forEach((v) => {
+      console.log("show ",v);
+      return <AppointmentSlot />;
+    }); */
   };
 
   //get patient booking details
   const getMyBookings = () => {
-    slots
-      .forEach((n) => {
-        doctorDetail({ docId: n.id }).then((data) => {
+    slots.forEach((n) => {
+      doctorDetail({ docId: n.id })
+        .then((data) => {
           if (data.error) {
             return console.log("ERROR OCCURRED");
-          } else {
-            setDoctorData(
-              ...doctorData,
-              doctorData.push({
-                data: data,
-                index: n.index,
-              })
-            );
           }
-          console.table(doctorData);
-        });
-      })
-      .catch(() => console.log("catch error"));
+          console.log("DATA", data);
+          setValue(
+            ...value,
+            value.push({
+              name: data.fullname,
+              slot: n.index,
+              email: data.email,
+            })
+          );
+          console.log("VALUE", value);
+        })
+        .catch((err) => console.log(err));
+    });
   };
 
-  /*   const getMyAppointment = () => {
-    var length = doctors.length;
-    for (var i = 0; i < length; i++) {
-      if (doctors[i].appointment.includes(patientID)) {
-        //  doctors[i].appointment.indexOf(patientID);
-        displayMyAppointment.push(doctors[i]);
-        //  console.log("FOUND in", i);
-      } else {
-        console.log("NOT FOUND IN", i);
-      }
-    }
-    console.log(`Appointment found in : ${i}`, displayMyAppointment);
-    findMyAppointment();
-  };
- */
-  /*   const findMyAppointment = () => {
-    displayMyAppointment.forEach((doctor) => {
-      doctor.appointment.forEach((data, index) => {
-        if (data === patientID) {
-        
-          // navigate to a function that prints the detail in demo card
-          console.log(`YOUR APPOINTMENT IS ON ${index} in DOCTOR:${doctor.fullname}`, data);
-       
-        } else {
-          console.log("NO BOOKING");
-        }
-      });
-    });
-  }; */
   const loadAllDoctors = () => {
     getAllDoctors()
       .then((data) => {
@@ -112,25 +100,10 @@ const PatientDashboard = () => {
           </p>
         </Link>
       </div>
-      <p onClick={getItem} className="text-center text-4xl text-white mb-3">
-        My Appointment
-      </p>
-      <div className="grid gap-10 grid-cols-4 grid-rows-4 auto-cols-auto p-5 justify-evenly">
-        {/*    {doctorData.map((item, index) => {
-          return <Demo key={index} data={item[0].data} />;
-        })} */}
-        <AppointmentSlot name={"Doc"} slot={"26"} email={"doc@doc.com"} />
-        <AppointmentSlot
-          name={"Tester"}
-          slot={"28"}
-          email={"Tester@Tester.com"}
-        />
-        <AppointmentSlot
-          name={"Final Test"}
-          slot={"29"}
-          email={"final@final.com"}
-        />
-        <AppointmentSlot name={"New"} slot={"30"} email={"New@New.com"} />
+      <p onClick={showBooking} className="text-center text-4xl text-white mb-3">My Appointment</p>
+      <div className="grid gap-10 grid-cols-4 grid-rows-4 auto-cols-auto p-3 mx-auto content-center justify-evenly">
+       {/*  {value.length < 2 ?  : noBooking()} */}
+        {noBooking()}
       </div>
 
       <p className="text-center text-4xl text-white mb-3">Book Appointment</p>

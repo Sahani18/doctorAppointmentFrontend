@@ -29,7 +29,7 @@ export const signInDoctor = async (user) => {
 };
 
 export const getPatient = async (id) => {
-  return await fetch(`http://localhost:8000/doctor/getPatientInfo`, {
+  return await fetch(`http://localhost:8000/patient/getPatientInfo`, {
     method: "POST",
     headers: {
       Accept: "application/json",
