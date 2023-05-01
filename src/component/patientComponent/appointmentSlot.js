@@ -1,6 +1,6 @@
 import React from "react";
 
-function AppointmentSlot({ name,slot,email }) {
+function AppointmentSlot({ name="NA", slot="NA", email="NA" }) {
  
   return (
     <div className="h-14 w-44 bg-yellow-400 rounded-lg ">

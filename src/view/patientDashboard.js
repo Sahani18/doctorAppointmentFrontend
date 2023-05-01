@@ -13,14 +13,25 @@ const PatientDashboard = () => {
 
   var slots = location.state.bookingDate;
 
-  const [isShow, setIsShow] = useState(false);
-  const [value, setValue] = useState([
-    {
-      name: "",
-      slot: "",
-      email: "",
-    },
-  ]);
+  const [value, setValue] = useState([]);
+
+  const dateTime = (s) => {
+    if (s == 0) {
+      return 26;
+    }
+    if (s == 1) {
+      return 27;
+    }
+    if (s == 2) {
+      return 28;
+    }
+    if (s == 3) {
+      return 29;
+    }
+    if (s == 4) {
+      return 30;
+    }
+  };
 
   const noBooking = () => {
     return (
@@ -31,13 +42,6 @@ const PatientDashboard = () => {
       </div>
     );
   };
-  const showBooking = () => {
-    console.log("showing the booking",value);
-   /*  return value.forEach((v) => {
-      console.log("show ",v);
-      return <AppointmentSlot />;
-    }); */
-  };
 
   //get patient booking details
   const getMyBookings = () => {
@@ -47,19 +51,19 @@ const PatientDashboard = () => {
           if (data.error) {
             return console.log("ERROR OCCURRED");
           }
-          console.log("DATA", data);
-          setValue(
+
+          setValue([
             ...value,
             value.push({
               name: data.fullname,
               slot: n.index,
               email: data.email,
-            })
-          );
-          console.log("VALUE", value);
+            }),
+          ]);
         })
         .catch((err) => console.log(err));
     });
+    console.log("ARRAY ", value);
   };
 
   const loadAllDoctors = () => {
@@ -70,7 +74,6 @@ const PatientDashboard = () => {
         }
         setDoctors(data);
         getMyBookings();
-        return;
       })
       .catch((e) => console.log(e));
   };
@@ -100,10 +103,19 @@ const PatientDashboard = () => {
           </p>
         </Link>
       </div>
-      <p onClick={showBooking} className="text-center text-4xl text-white mb-3">My Appointment</p>
+      <p className="text-center text-4xl text-white mb-3">My Appointment</p>
       <div className="grid gap-10 grid-cols-4 grid-rows-4 auto-cols-auto p-3 mx-auto content-center justify-evenly">
-       {/*  {value.length < 2 ?  : noBooking()} */}
-        {noBooking()}
+        {value.map((val, index) => {
+          console.log("UI", value);
+          return (
+            <AppointmentSlot
+              key={index}
+              name={val.name}
+              email={val.email}
+              slot={dateTime(val.slot)}
+            />
+          );
+        })}
       </div>
 
       <p className="text-center text-4xl text-white mb-3">Book Appointment</p>
